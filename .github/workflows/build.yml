@@ -1,0 +1,27 @@
+name: BUILD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Non-AUR:
+    strategy:
+      matrix:
+        PKGBUILDs: [furious]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Build Non-AUR packages
+        id: makepkg
+        uses: ./build-nonaur-action
+        with:
+          pkgdir: ${{ matrix.PKGBUILDs }}
+          aurDeps: true
+
+      - uses: actions/upload-artifact@v3.1.3
+        with:
+          path: ./*/*.pkg.tar.zst
+          name: ${{ matrix.PKGBUILDs }}
+          if-no-files-found: error
