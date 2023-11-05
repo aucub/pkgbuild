@@ -1,4 +1,4 @@
-# Maintainer: irmluity <irmluity@proton.me>
+# Maintainer: irmluity <45vw4yz8g@mozmail.com>
 
 pkgname=wox
 pkgver=2.0.0_alpha.1
@@ -10,6 +10,7 @@ license=('MIT')
 depends=('webkit2gtk' 'libayatana-indicator' 'glibc' 'libx11' 'libxtst' 'pango' 'ayatana-ido' 'at-spi2-core' 'glib2' 'cairo' 'harfbuzz' 'gdk-pixbuf2' 'libayatana-appindicator' 'zlib' 'gtk3' 'libdbusmenu-glib')
 makedepends=('go' 'just' 'nodejs' 'pnpm' 'python' 'cargo' 'libsoup')
 provides=("wox")
+conflicts=('wox-bin' 'wox-git')
 options=(!strip)
 source=(
     "https://github.com/Wox-launcher/Wox/archive/refs/tags/v${pkgver//_/-}.zip"
