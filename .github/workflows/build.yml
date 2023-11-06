@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [marble-shell-theme]
+        PKGBUILDs: [wox-bin, furious]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
