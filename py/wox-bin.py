@@ -10,7 +10,7 @@ with open(os.environ.get("PKGBUILD"), "r") as file:
         if "pkgver=" in line:
             pkgver = line.split("=")[1].strip()
         if "wox-linux-amd64-" in line:
-            name = line.split("wox-linux-amd64-")[1].strip()
+            name = line.split("wox-linux-amd64-")[1].strip().split('"')[0].strip()
 response = requests.get(
     "https://api.github.com/repos/" + os.environ.get("REPO") + "/releases/latest"
 )
