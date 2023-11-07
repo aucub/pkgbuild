@@ -37,7 +37,7 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          python $PY
+          echo "result=$(python $PY)" >> $GITHUB_OUTPUT
           rm -rf .venv
         id: draft
         env:

@@ -63,6 +63,6 @@ if update == 0:
             if "sha256" in line:
                 lines[i + 1] = '    "' + sha256_hash.hexdigest() + '"' + "\n"
         file.writelines(lines)
-    print(f"::set-output name=result::{name}")
+    print(f"{name}")
 else:
-    print(f"::set-output name=result::0")
+    print(f"0")
