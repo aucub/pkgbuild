@@ -10,23 +10,27 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        REPOS:
-          [
-            { REPO: Wox-launcher/Wox, DIRECTORY: wox-bin, SLEEP:5 },
-            { REPO: hiddify/hiddify-next, DIRECTORY: hiddify-bin, SLEEP:120 },
-            { REPO: LorenEteval/Furious, DIRECTORY: furious, SLEEP:240 },
-          ]
+        include:
+          - REPO: Wox-launcher/Wox
+            DIRECTORY: wox-bin,
+            SLEEP: 5
+          - REPO: hiddify/hiddify-next
+            DIRECTORY: hiddify-bin
+            SLEEP: 120
+          - REPO: LorenEteval/Furious
+            DIRECTORY: furious
+            SLEEP: 240
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
     outputs:
       result: ${{ steps.draft.outputs.result }}
-      DIRECTORY: ${{ matrix.REPOS.DIRECTORY }}
+      DIRECTORY: ${{ matrix.DIRECTORY }}
     steps:
       - uses: actions/checkout@v4.1.1
 
       - run: |
-          sleep ${{ matrix.REPOS.SLEEP }}
+          sleep ${{ matrix.SLEEP }}
           pacman -Syu --noconfirm
           pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
           python -m venv .venv
@@ -37,14 +41,14 @@ jobs:
           rm -rf .venv
         id: draft
         env:
-          PKGBUILD: ${{ matrix.REPOS.DIRECTORY }}/PKGBUILD
-          PY: py/${{ matrix.REPOS.DIRECTORY }}.py
-          REPO: ${{ matrix.REPOS.REPO }}
+          PKGBUILD: ${{ matrix.DIRECTORY }}/PKGBUILD
+          PY: py/${{ matrix.DIRECTORY }}.py
+          REPO: ${{ matrix.REPO }}
 
       - if: ${{ steps.draft.outputs.result }}!=0
         env:
           result: ${{ steps.draft.outputs.result }}
-          DIRECTORY: ${{ matrix.REPOS.DIRECTORY }}
+          DIRECTORY: ${{ matrix.DIRECTORY }}
         run: |
           useradd builder -m
           chmod -R a+rw .
@@ -58,7 +62,7 @@ jobs:
           keep_history: true
           allow_empty_commit: false
           commit_message: update version to ${{ steps.draft.outputs.result }}
-          target_branch: bot-${{ matrix.REPOS.DIRECTORY }}
+          target_branch: bot-${{ matrix.DIRECTORY }}
           build_dir: .
           committer: ${{ secrets.COMMITTER }}
           author: ${{ secrets.AUTHOR }}
