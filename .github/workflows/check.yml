@@ -12,7 +12,7 @@ jobs:
       matrix:
         include:
           - REPO: Wox-launcher/Wox
-            DIRECTORY: wox-bin,
+            DIRECTORY: wox-bin
             SLEEP: 5
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify-bin
@@ -69,6 +69,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   push:
+    strategy:
+      max-parallel: 1
+      matrix:
+        include:
+          - REPO: Wox-launcher/Wox
+            DIRECTORY: wox-bin
+          - REPO: hiddify/hiddify-next
+            DIRECTORY: hiddify-bin
+          - REPO: LorenEteval/Furious
+            DIRECTORY: furious
     runs-on: ubuntu-latest
     needs: check
     if: ${{needs.check.outputs.result}}!=0
