@@ -1,12 +1,12 @@
-name: update wox to latest
+name: update furious to latest
 
 on:
   schedule:
-    - cron: "0 18 * * *"
+    - cron: "0 19 * * *"
 
 env:
-  REPO: Wox-launcher/Wox
-  DIRECTORY: wox-bin
+  REPO: LorenEteval/Furious
+  DIRECTORY: furious
 
 jobs:
   check:
@@ -25,7 +25,7 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          python wox.py
+          python furious.py
           rm -rf .venv
         id: draft
         env:

@@ -1,12 +1,12 @@
-name: update wox to latest
+name: update hiddify to latest
 
 on:
   schedule:
-    - cron: "0 18 * * *"
+    - cron: "0 20 * * *"
 
 env:
-  REPO: Wox-launcher/Wox
-  DIRECTORY: wox-bin
+  REPO: hiddify/hiddify-next
+  DIRECTORY: hiddify-bin
 
 jobs:
   check:
@@ -25,7 +25,7 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          python wox.py
+          python hiddify.py
           rm -rf .venv
         id: draft
         env:
