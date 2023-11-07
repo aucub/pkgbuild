@@ -1,40 +1,50 @@
-name: update wox to latest
+name: update to latest
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 18 * * *"
 
-env:
-  REPO: Wox-launcher/Wox
-  DIRECTORY: wox-bin
-
 jobs:
   check:
+    strategy:
+      max-parallel: 1
+      matrix:
+        REPOS:
+          [
+            { REPO: Wox-launcher/Wox, DIRECTORY: wox-bin, SLEEP:5 },
+            { REPO: hiddify/hiddify-next, DIRECTORY: hiddify-bin, SLEEP:120 },
+            { REPO: LorenEteval/Furious, DIRECTORY: furious, SLEEP:240 },
+          ]
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
     outputs:
       result: ${{ steps.draft.outputs.result }}
+      DIRECTORY: ${{ matrix.REPOS.DIRECTORY }}
     steps:
       - uses: actions/checkout@v4.1.1
 
       - run: |
+          sleep ${{ matrix.REPOS.SLEEP }}
           pacman -Syu --noconfirm
           pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          python wox.py
+          python $PY
           rm -rf .venv
         id: draft
         env:
-          PKGBUILD: ${{ env.DIRECTORY }}/PKGBUILD
-          REPO: ${{ env.REPO }}
+          PKGBUILD: ${{ matrix.REPOS.DIRECTORY }}/PKGBUILD
+          PY: py/${{ matrix.REPOS.DIRECTORY }}.py
+          REPO: ${{ matrix.REPOS.REPO }}
+
       - if: ${{ steps.draft.outputs.result }}!=0
         env:
           result: ${{ steps.draft.outputs.result }}
-          DIRECTORY: ${{ env.DIRECTORY }}
+          DIRECTORY: ${{ matrix.REPOS.DIRECTORY }}
         run: |
           useradd builder -m
           chmod -R a+rw .
@@ -45,7 +55,10 @@ jobs:
       - name: push
         uses: crazy-max/ghaction-github-pages@v4.0.0
         with:
-          target_branch: bot
+          keep_history: true
+          allow_empty_commit: false
+          commit_message: update version to ${{ steps.draft.outputs.result }}
+          target_branch: bot-${{ matrix.REPOS.DIRECTORY }}
           build_dir: .
           committer: ${{ secrets.COMMITTER }}
           author: ${{ secrets.AUTHOR }}
@@ -58,23 +71,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
         with:
-          ref: bot
+          ref: bot-${{needs.check.outputs.DIRECTORY}}
       - uses: webfactory/ssh-agent@v0.8.0
         with:
-          ssh-private-key: ${{ secrets.id_ed25519 }}
+          ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
         env:
           result: ${{needs.check.outputs.result}}
           name: ${{ secrets.name }}
           email: ${{ secrets.email }}
-          gitconfig: ${{ secrets.gitconfig }}
+          DIRECTORY: ${{needs.check.outputs.DIRECTORY}}
         run: |
           mkdir new
           cd new
-          echo $gitconfig > ~/.gitconfig
           ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
-          echo "ssh://aur@aur.archlinux.org/$DIRECTORY.git"
           git clone ssh://aur@aur.archlinux.org/$DIRECTORY.git .
           git config --local user.email $email
           git config --local user.name $name
@@ -84,4 +95,14 @@ jobs:
           git add .SRCINFO
           git commit -m  "update version to $result"
           git push
-          echo "update version to $result"
+          git clone git@github.com:aucub/aur.git
+          cp PKGBUILD aur/$DIRECTORY/
+          cp .SRCINFO aur/$DIRECTORY/
+          cd aur
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+          git config --local user.email $email
+          git config --local user.name $name
+          git add $DIRECTORY/PKGBUILD
+          git add $DIRECTORY/.SRCINFO
+          git commit -m  "update $DIRECTORY version to $result"
+          git push

@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [wox-bin, bitcomet]
+        PKGBUILDs: [wox-bin]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:

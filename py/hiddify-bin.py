@@ -1,5 +1,4 @@
 import os
-import re
 import requests
 import hashlib
 
@@ -45,7 +44,6 @@ if update == 0:
             if "sha256" in line:
                 lines[i + 1] = '    "' + sha256_hash.hexdigest() + '"' + "\n"
         file.writelines(lines)
-    name = data["tag_name"]
-    print(f"::set-output name=result::{name}")
+    print(f"::set-output name=result::{pkgver}")
 else:
     print(f"::set-output name=result::0")

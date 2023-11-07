@@ -1,87 +1,87 @@
-name: update hiddify to latest
+# name: update hiddify to latest
 
-on:
-  schedule:
-    - cron: "0 20 * * *"
+# on:
+#   schedule:
+#     - cron: "0 20 * * *"
 
-env:
-  REPO: hiddify/hiddify-next
-  DIRECTORY: hiddify-bin
+# env:
+#   REPO: hiddify/hiddify-next
+#   DIRECTORY: hiddify-bin
 
-jobs:
-  check:
-    runs-on: ubuntu-latest
-    container:
-      image: archlinux:base-devel
-    outputs:
-      result: ${{ steps.draft.outputs.result }}
-    steps:
-      - uses: actions/checkout@v4.1.1
+# jobs:
+#   check:
+#     runs-on: ubuntu-latest
+#     container:
+#       image: archlinux:base-devel
+#     outputs:
+#       result: ${{ steps.draft.outputs.result }}
+#     steps:
+#       - uses: actions/checkout@v4.1.1
 
-      - run: |
-          pacman -Syu --noconfirm
-          pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install --upgrade pip
-          pip install requests
-          python hiddify.py
-          rm -rf .venv
-        id: draft
-        env:
-          PKGBUILD: ${{ env.DIRECTORY }}/PKGBUILD
-          REPO: ${{ env.REPO }}
-      - if: ${{ steps.draft.outputs.result }}!=0
-        env:
-          result: ${{ steps.draft.outputs.result }}
-          DIRECTORY: ${{ env.DIRECTORY }}
-        run: |
-          useradd builder -m
-          chmod -R a+rw .
-          cd $DIRECTORY
-          sudo -u builder makepkg --printsrcinfo > .SRCINFO
-          rm -rf file
-          cd ..
-      - name: push
-        uses: crazy-max/ghaction-github-pages@v4.0.0
-        with:
-          target_branch: bot
-          build_dir: .
-          committer: ${{ secrets.COMMITTER }}
-          author: ${{ secrets.AUTHOR }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  push:
-    runs-on: ubuntu-latest
-    needs: check
-    if: ${{needs.check.outputs.result}}!=0
-    steps:
-      - uses: actions/checkout@v4.1.1
-        with:
-          ref: bot
-      - uses: webfactory/ssh-agent@v0.8.0
-        with:
-          ssh-private-key: ${{ secrets.id_ed25519 }}
-          log-public-key: false
-      - name: push
-        env:
-          result: ${{needs.check.outputs.result}}
-          name: ${{ secrets.name }}
-          email: ${{ secrets.email }}
-          gitconfig: ${{ secrets.gitconfig }}
-        run: |
-          mkdir new
-          cd new
-          echo $gitconfig > ~/.gitconfig
-          ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
-          echo "ssh://aur@aur.archlinux.org/$DIRECTORY.git"
-          git clone ssh://aur@aur.archlinux.org/$DIRECTORY.git .
-          git config --local user.email $email
-          git config --local user.name $name
-          cp ../$DIRECTORY/PKGBUILD ./
-          cp ../$DIRECTORY/.SRCINFO ./
-          git add PKGBUILD
-          git add .SRCINFO
-          git commit -m  "update version to $result"
-          git push
-          echo "update version to $result"
+#       - run: |
+#           pacman -Syu --noconfirm
+#           pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
+#           python -m venv .venv
+#           source .venv/bin/activate
+#           pip install --upgrade pip
+#           pip install requests
+#           python hiddify.py
+#           rm -rf .venv
+#         id: draft
+#         env:
+#           PKGBUILD: ${{ env.DIRECTORY }}/PKGBUILD
+#           REPO: ${{ env.REPO }}
+#       - if: ${{ steps.draft.outputs.result }}!=0
+#         env:
+#           result: ${{ steps.draft.outputs.result }}
+#           DIRECTORY: ${{ env.DIRECTORY }}
+#         run: |
+#           useradd builder -m
+#           chmod -R a+rw .
+#           cd $DIRECTORY
+#           sudo -u builder makepkg --printsrcinfo > .SRCINFO
+#           rm -rf file
+#           cd ..
+#       - name: push
+#         uses: crazy-max/ghaction-github-pages@v4.0.0
+#         with:
+#           target_branch: bot
+#           build_dir: .
+#           committer: ${{ secrets.COMMITTER }}
+#           author: ${{ secrets.AUTHOR }}
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#   push:
+#     runs-on: ubuntu-latest
+#     needs: check
+#     if: ${{needs.check.outputs.result}}!=0
+#     steps:
+#       - uses: actions/checkout@v4.1.1
+#         with:
+#           ref: bot
+#       - uses: webfactory/ssh-agent@v0.8.0
+#         with:
+#           ssh-private-key: ${{ secrets.id_ed25519 }}
+#           log-public-key: false
+#       - name: push
+#         env:
+#           result: ${{needs.check.outputs.result}}
+#           name: ${{ secrets.name }}
+#           email: ${{ secrets.email }}
+#           gitconfig: ${{ secrets.gitconfig }}
+#         run: |
+#           mkdir new
+#           cd new
+#           echo $gitconfig > ~/.gitconfig
+#           ssh-keyscan -t rsa aur.archlinux.org >> ~/.ssh/known_hosts
+#           echo "ssh://aur@aur.archlinux.org/$DIRECTORY.git"
+#           git clone ssh://aur@aur.archlinux.org/$DIRECTORY.git .
+#           git config --local user.email $email
+#           git config --local user.name $name
+#           cp ../$DIRECTORY/PKGBUILD ./
+#           cp ../$DIRECTORY/.SRCINFO ./
+#           git add PKGBUILD
+#           git add .SRCINFO
+#           git commit -m  "update version to $result"
+#           git push
+#           echo "update version to $result"
