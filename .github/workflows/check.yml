@@ -8,7 +8,7 @@ on:
 jobs:
   check:
     strategy:
-      max-parallel: 1
+      # max-parallel: 1
       matrix:
         include:
           - REPO: Wox-launcher/Wox
