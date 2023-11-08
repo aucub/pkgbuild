@@ -12,7 +12,7 @@ response = requests.get(
     "https://api.github.com/repos/"
     + os.environ.get("REPO")
     + "/releases/"
-    + os.environ.get("LATEST")
+    + str(os.environ.get("LATEST"))
 )
 data = response.json()
 if data["tag_name"].replace("-", "_") != "v" + pkgver:
