@@ -48,14 +48,11 @@ jobs:
           if [ $REPO = 'Wox-launcher/Wox' ]
           then
             echo "woxbinresult=$(python $PY)" >> $GITHUB_OUTPUT
-            echo $woxbinresult
           elif [ $REPO = 'hiddify/hiddify-next' ]
           then
             echo "hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
-            echo $hiddifybinresult
           else
             echo "furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
-            echo $furiousresult
           fi
           rm -rf .venv
         id: draft
@@ -105,16 +102,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-        if: ${{ matrix.RESULT }}!=0
+        if: ${{ matrix.RESULT }}!='0'
         with:
           ref: bot-${{ matrix.DIRECTORY }}
       - uses: webfactory/ssh-agent@v0.8.0
-        if: ${{ matrix.RESULT }}!=0
+        if: ${{ matrix.RESULT }}!='0'
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
-        if: ${{ matrix.RESULT }}!=0
+        if: ${{ matrix.RESULT }}!='0'
         env:
           result: ${{ matrix.RESULT }}
           name: ${{ secrets.name }}
