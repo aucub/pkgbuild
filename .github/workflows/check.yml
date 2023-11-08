@@ -1,33 +1,31 @@
-name: update to latest
+name: UPDATE TO LATEST
 
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: "0 18 * * *"
+  schedule:
+    - cron: "0 20,8,14 * * *"
 
 jobs:
   check:
     strategy:
-      # max-parallel: 1
       fail-fast: false
       matrix:
         include:
           - REPO: Wox-launcher/Wox
+            TYPE: bin
             DIRECTORY: wox-bin
-            SLEEP: 5
+            ASSET: wox-linux-amd64
           - REPO: hiddify/hiddify-next
+            TYPE: bin
             DIRECTORY: hiddify.next-bin
-            SLEEP: 120
+            ASSET: hiddify-linux-x64.zip
           - REPO: LorenEteval/Furious
+            TYPE: source
             DIRECTORY: furious
-            SLEEP: 240
+            ASSET: No
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
-    outputs:
-      woxbinresult: ${{ steps.draft.outputs.woxbinresult }}
-      hiddifybinresult: ${{ steps.draft.outputs.hiddifybinresult }}
-      furiousresult: ${{ steps.draft.outputs.furiousresult }}
     steps:
       - uses: actions/checkout@v4.1.1
 
@@ -45,22 +43,14 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          if [ $REPO = 'Wox-launcher/Wox' ]
-          then
-            echo "woxbinresult=$(python $PY)" >> $GITHUB_OUTPUT
-          elif [ $REPO = 'hiddify/hiddify-next' ]
-          then
-            echo "hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
-          else
-            echo "furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
-          fi
+          python $PY
           rm -rf .venv
-        id: draft
         env:
           PKGBUILD: ${{ matrix.DIRECTORY }}/PKGBUILD
-          PY: py/${{ matrix.DIRECTORY }}.py
+          PY: py/${{ matrix.TYPE }}.py
           REPO: ${{ matrix.REPO }}
           LATEST: ${{ steps.get_release.outputs.id }}
+          ASSET: ${{ matrix.ASSET }}
 
       - env:
           DIRECTORY: ${{ matrix.DIRECTORY }}
@@ -92,28 +82,34 @@ jobs:
         include:
           - REPO: Wox-launcher/Wox
             DIRECTORY: wox-bin
-            RESULT: ${{needs.check.outputs.woxbinresult}}
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next-bin
-            RESULT: ${{needs.check.outputs.hiddifybinresult}}
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
-            RESULT: ${{needs.check.outputs.furiousresult}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-        if: ${{ !contains(matrix.RESULT, 'new') }}
         with:
           ref: bot-${{ matrix.DIRECTORY }}
+      - run: |
+          version=$(<"$FILE")
+          if [[ "$version" == *"new"* ]]; then
+            echo "Version New. Exiting workflow."
+            exit 1
+          else
+            echo "version=$version" >> $GITHUB_OUTPUT
+            echo "Version not New. Continuing workflow."
+          fi
+        env:
+          FILE: ${{ matrix.DIRECTORY }}/version.txt
+        id: version
       - uses: webfactory/ssh-agent@v0.8.0
-        if: ${{ !contains(matrix.RESULT, 'new') }}
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
-        if: ${{ !contains(matrix.RESULT, 'new') }}
         env:
-          result: ${{ matrix.RESULT }}
+          result: ${{ steps.version.outputs.version }}
           name: ${{ secrets.name }}
           email: ${{ secrets.email }}
           DIRECTORY: ${{ matrix.DIRECTORY }}
