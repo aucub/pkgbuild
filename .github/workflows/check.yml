@@ -2,8 +2,8 @@ name: update to latest
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 18 * * *"
+  # schedule:
+  #   - cron: "0 18 * * *"
 
 jobs:
   check:
@@ -16,7 +16,7 @@ jobs:
             DIRECTORY: wox-bin
             SLEEP: 5
           - REPO: hiddify/hiddify-next
-            DIRECTORY: hiddify-bin
+            DIRECTORY: hiddify.next-bin
             SLEEP: 120
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
@@ -94,7 +94,7 @@ jobs:
             DIRECTORY: wox-bin
             RESULT: ${{needs.check.outputs.woxbinresult}}
           - REPO: hiddify/hiddify-next
-            DIRECTORY: hiddify-bin
+            DIRECTORY: hiddify.next-bin
             RESULT: ${{needs.check.outputs.hiddifybinresult}}
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
