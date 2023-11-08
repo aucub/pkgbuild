@@ -49,4 +49,4 @@ if update == 0:
         file.writelines(lines)
     print(f"{pkgver}")
 else:
-    print(f"0")
+    print(f"new")

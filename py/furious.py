@@ -46,4 +46,4 @@ if update == 0:
     name = data["tag_name"]
     print(f"{name}")
 else:
-    print(f"0")
+    print(f"new")

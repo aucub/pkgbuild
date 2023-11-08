@@ -68,4 +68,4 @@ if update == 0:
         file.writelines(lines)
     print(f"{name}")
 else:
-    print(f"0")
+    print(f"new")
