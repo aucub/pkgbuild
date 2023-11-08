@@ -9,6 +9,7 @@ jobs:
   check:
     strategy:
       # max-parallel: 1
+      fail-fast: false
       matrix:
         include:
           - REPO: Wox-launcher/Wox
@@ -24,8 +25,9 @@ jobs:
     container:
       image: archlinux:base-devel
     outputs:
-      result: ${{ steps.draft.outputs.result }}
-      DIRECTORY: ${{ matrix.DIRECTORY }}
+      wox-bin-result: ${{ steps.draft.outputs.wox-bin-result }}
+      hiddify-bin-result: ${{ steps.draft.outputs.hiddify-bin-result }}
+      furious-result: ${{ steps.draft.outputs.furious-result }}
     steps:
       - uses: actions/checkout@v4.1.1
 
@@ -37,14 +39,13 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - run: |
-          sleep ${{ matrix.SLEEP }}
           pacman -Syu --noconfirm
           pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          echo "result=$(python $PY)" >> $GITHUB_OUTPUT
+          echo "$DIRECTORY-result=$(python $PY)" >> $GITHUB_OUTPUT
           rm -rf .venv
         id: draft
         env:
@@ -77,35 +78,39 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   push:
+    needs: check
     strategy:
       max-parallel: 1
+      fail-fast: false
       matrix:
         include:
           - REPO: Wox-launcher/Wox
             DIRECTORY: wox-bin
+            RESULT: ${{needs.check.outputs.wox-bin-result}}
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify-bin
+            RESULT: ${{needs.check.outputs.hiddify-bin-result}}
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
+            RESULT: ${{needs.check.outputs.furious-result}}
     runs-on: ubuntu-latest
-    needs: check
     steps:
       - uses: actions/checkout@v4.1.1
-        if: ${{needs.check.outputs.result}}!=0
+        if: ${{ matrix.RESULT }}!=0
         with:
-          ref: bot-${{needs.check.outputs.DIRECTORY}}
+          ref: bot-${{ matrix.DIRECTORY }}
       - uses: webfactory/ssh-agent@v0.8.0
-        if: ${{needs.check.outputs.result}}!=0
+        if: ${{ matrix.RESULT }}!=0
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
-        if: ${{needs.check.outputs.result}}!=0
+        if: ${{ matrix.RESULT }}!=0
         env:
-          result: ${{needs.check.outputs.result}}
+          result: ${{ matrix.RESULT }}
           name: ${{ secrets.name }}
           email: ${{ secrets.email }}
-          DIRECTORY: ${{needs.check.outputs.DIRECTORY}}
+          DIRECTORY: ${{ matrix.DIRECTORY }}
         run: |
           mkdir new
           cd new

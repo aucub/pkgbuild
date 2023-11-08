@@ -19,7 +19,7 @@ response = requests.get(
 )
 data = response.json()
 if data["tag_name"].replace("-", "_") != "v" + pkgver:
-    pkgver = data["tag_name"].replace("-", "_").split("v")[1].strip()
+    pkgver = data["tag_name"].split("v", 1)[1].replace("-", "_").strip()
     pkgrel = 1
     update = 0
 for asset in data["assets"]:
