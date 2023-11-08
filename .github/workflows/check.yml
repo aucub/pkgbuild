@@ -102,16 +102,16 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-        if: ${{ matrix.RESULT }}!='new'
+        if: ${{ !contains(matrix.RESULT, 'new') }}
         with:
           ref: bot-${{ matrix.DIRECTORY }}
       - uses: webfactory/ssh-agent@v0.8.0
-        if: ${{ matrix.RESULT }}!='new'
+        if: ${{ !contains(matrix.RESULT, 'new') }}
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
-        if: ${{ matrix.RESULT }}!='new'
+        if: ${{ !contains(matrix.RESULT, 'new') }}
         env:
           result: ${{ matrix.RESULT }}
           name: ${{ secrets.name }}
