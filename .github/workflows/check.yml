@@ -56,7 +56,7 @@ jobs:
 
       - if: ${{ steps.draft.outputs.result }}!=0
         env:
-          result: ${{ steps.draft.outputs.result }}
+          result: ${{ steps.draft.outputs.${{ matrix.DIRECTORY }}-result }}
           DIRECTORY: ${{ matrix.DIRECTORY }}
         run: |
           useradd builder -m
