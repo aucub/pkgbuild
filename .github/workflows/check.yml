@@ -46,7 +46,7 @@ jobs:
           pip install --upgrade pip
           pip install requests
           echo "$DIRECTORY-result=$(python $PY)" >> $GITHUB_OUTPUT
-          echo $(DIRECTORY-result)
+          echo $($DIRECTORY-result)
           rm -rf .venv
         id: draft
         env:
