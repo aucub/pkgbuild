@@ -9,7 +9,10 @@ with open(os.environ.get("PKGBUILD"), "r") as file:
         if "pkgver=" in line:
             pkgver = line.split("=")[1].strip()
 response = requests.get(
-    "https://api.github.com/repos/" + os.environ.get("REPO") + "/releases/latest"
+    "https://api.github.com/repos/"
+    + os.environ.get("REPO")
+    + "/releases/"
+    + os.environ.get("LATEST")
 )
 data = response.json()
 if data["tag_name"].replace("-", "_") != "v" + pkgver:

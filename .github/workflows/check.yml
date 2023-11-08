@@ -29,6 +29,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
 
+      - uses: joutvhu/get-release@v1
+        id: get_release
+        with:
+          latest: true
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - run: |
           sleep ${{ matrix.SLEEP }}
           pacman -Syu --noconfirm
@@ -44,6 +52,7 @@ jobs:
           PKGBUILD: ${{ matrix.DIRECTORY }}/PKGBUILD
           PY: py/${{ matrix.DIRECTORY }}.py
           REPO: ${{ matrix.REPO }}
+          LATEST: ${{ steps.get_release.outputs.id }}
 
       - if: ${{ steps.draft.outputs.result }}!=0
         env:
@@ -81,16 +90,18 @@ jobs:
             DIRECTORY: furious
     runs-on: ubuntu-latest
     needs: check
-    if: ${{needs.check.outputs.result}}!=0
     steps:
       - uses: actions/checkout@v4.1.1
+        if: ${{needs.check.outputs.result}}!=0
         with:
           ref: bot-${{needs.check.outputs.DIRECTORY}}
       - uses: webfactory/ssh-agent@v0.8.0
+        if: ${{needs.check.outputs.result}}!=0
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
+        if: ${{needs.check.outputs.result}}!=0
         env:
           result: ${{needs.check.outputs.result}}
           name: ${{ secrets.name }}

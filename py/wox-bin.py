@@ -12,7 +12,10 @@ with open(os.environ.get("PKGBUILD"), "r") as file:
         if "wox-linux-amd64-" in line:
             name = line.split("wox-linux-amd64-")[1].strip().split('"')[0].strip()
 response = requests.get(
-    "https://api.github.com/repos/" + os.environ.get("REPO") + "/releases/latest"
+    "https://api.github.com/repos/"
+    + os.environ.get("REPO")
+    + "/releases/"
+    + +os.environ.get("LATEST")
 )
 data = response.json()
 if data["tag_name"].replace("-", "_") != "v" + pkgver:
