@@ -52,7 +52,7 @@ jobs:
           elif [ $REPO = 'hiddify/hiddify-next' ]
           then
             echo "$hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
-            $hiddifybinresult
+            echo $hiddifybinresult
           else
             echo "$furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
             echo $furiousresult
