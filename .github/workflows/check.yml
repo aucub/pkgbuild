@@ -25,9 +25,9 @@ jobs:
     container:
       image: archlinux:base-devel
     outputs:
-      wox-bin-result: ${{ steps.draft.outputs.woxbinresult }}
-      hiddify-bin-result: ${{ steps.draft.outputs.hiddifybinresult }}
-      furious-result: ${{ steps.draft.outputs.furiousresult }}
+      woxbinresult: ${{ steps.draft.outputs.woxbinresult }}
+      hiddifybinresult: ${{ steps.draft.outputs.hiddifybinresult }}
+      furiousresult: ${{ steps.draft.outputs.furiousresult }}
     steps:
       - uses: actions/checkout@v4.1.1
 
