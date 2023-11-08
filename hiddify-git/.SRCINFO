@@ -1,0 +1,27 @@
+pkgbase = hiddify-git
+	pkgdesc = A multi-platform client based on Sing-box that serves as a universal proxy tool-chain.
+	pkgver = v0.10.0
+	pkgrel = 1
+	url = https://github.com/hiddify/hiddify-next
+	arch = x86_64
+	license = CCPL
+	makedepends = cmake
+	makedepends = clang
+	makedepends = locate
+	makedepends = ninja
+	makedepends = pkg-config
+	makedepends = gtk3
+	makedepends = glib2
+	makedepends = libayatana-appindicator
+	makedepends = fuse
+	makedepends = appimagetool-bin
+	depends = hicolor-icon-theme
+	depends = zlib
+	depends = glibc
+	options = !strip
+	source = git+https://github.com/hiddify/hiddify-next.git
+	source = https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.9-stable.tar.xz
+	sha256sums = SKIP
+	sha256sums = b6bc6f93423488c67110e0fe56523cd2260f3a4c379ed015cd1c7fab66362739
+
+pkgname = hiddify-git

@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [wox-bin]
+        PKGBUILDs: [wox-bin,hiddify-git]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
