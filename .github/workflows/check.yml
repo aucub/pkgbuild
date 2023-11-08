@@ -47,14 +47,14 @@ jobs:
           pip install requests
           if [ $REPO = 'Wox-launcher/Wox' ]
           then
-            echo "$woxbinresult=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "woxbinresult=$(python $PY)" >> $GITHUB_OUTPUT
             echo $woxbinresult
           elif [ $REPO = 'hiddify/hiddify-next' ]
           then
-            echo "$hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
             echo $hiddifybinresult
           else
-            echo "$furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
             echo $furiousresult
           fi
           rm -rf .venv
