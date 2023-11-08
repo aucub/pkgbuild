@@ -29,11 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4.1.1
 
-      - uses: joutvhu/get-release@v1
+      - uses: pozetroninc/github-action-get-latest-release@master
         id: get_release
         with:
-          latest: true
-          prerelease: true
+          repository: ${{ matrix.REPO }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
