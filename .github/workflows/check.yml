@@ -45,8 +45,15 @@ jobs:
           source .venv/bin/activate
           pip install --upgrade pip
           pip install requests
-          echo "${DIRECTORY}-result=$(python $PY)" >> $GITHUB_OUTPUT
-          echo $(${DIRECTORY}-result)
+          if [ $REPO = 'Wox-launcher/Wox' ]
+          then
+            echo "$wox-bin-result=$(python $PY)" >> $GITHUB_OUTPUT
+          elif [ $REPO = 'hiddify/hiddify-next' ]
+          then
+            echo "$hiddify-bin-result=$(python $PY)" >> $GITHUB_OUTPUT
+          else
+            echo "$furious-result=$(python $PY)" >> $GITHUB_OUTPUT
+          fi
           rm -rf .venv
         id: draft
         env:
@@ -55,9 +62,7 @@ jobs:
           REPO: ${{ matrix.REPO }}
           LATEST: ${{ steps.get_release.outputs.id }}
 
-      - if: ${{ steps.draft.outputs.result }}!=0
-        env:
-          result: ${{ steps.draft.outputs.result }}
+      - env:
           DIRECTORY: ${{ matrix.DIRECTORY }}
         run: |
           useradd builder -m
@@ -71,7 +76,7 @@ jobs:
         with:
           keep_history: true
           allow_empty_commit: false
-          commit_message: update version to ${{ steps.draft.outputs.result }}
+          commit_message: update version
           target_branch: bot-${{ matrix.DIRECTORY }}
           build_dir: .
           committer: ${{ secrets.COMMITTER }}
