@@ -25,9 +25,9 @@ jobs:
     container:
       image: archlinux:base-devel
     outputs:
-      wox-bin-result: ${{ steps.draft.outputs.wox-bin-result }}
-      hiddify-bin-result: ${{ steps.draft.outputs.hiddify-bin-result }}
-      furious-result: ${{ steps.draft.outputs.furious-result }}
+      wox-bin-result: ${{ steps.draft.outputs.woxbinresult }}
+      hiddify-bin-result: ${{ steps.draft.outputs.hiddifybinresult }}
+      furious-result: ${{ steps.draft.outputs.furiousresult }}
     steps:
       - uses: actions/checkout@v4.1.1
 
@@ -47,12 +47,15 @@ jobs:
           pip install requests
           if [ $REPO = 'Wox-launcher/Wox' ]
           then
-            echo "$wox-bin-result=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "$woxbinresult=$(python $PY)" >> $GITHUB_OUTPUT
+            echo $woxbinresult
           elif [ $REPO = 'hiddify/hiddify-next' ]
           then
-            echo "$hiddify-bin-result=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "$hiddifybinresult=$(python $PY)" >> $GITHUB_OUTPUT
+            $hiddifybinresult
           else
-            echo "$furious-result=$(python $PY)" >> $GITHUB_OUTPUT
+            echo "$furiousresult=$(python $PY)" >> $GITHUB_OUTPUT
+            echo $furiousresult
           fi
           rm -rf .venv
         id: draft
@@ -92,13 +95,13 @@ jobs:
         include:
           - REPO: Wox-launcher/Wox
             DIRECTORY: wox-bin
-            RESULT: ${{needs.check.outputs.wox-bin-result}}
+            RESULT: ${{needs.check.outputs.woxbinresult}}
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify-bin
-            RESULT: ${{needs.check.outputs.hiddify-bin-result}}
+            RESULT: ${{needs.check.outputs.hiddifybinresult}}
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
-            RESULT: ${{needs.check.outputs.furious-result}}
+            RESULT: ${{needs.check.outputs.furiousresult}}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
