@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [wox-bin]
+        PKGBUILDs: [hiddify.next]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
@@ -25,25 +25,3 @@ jobs:
           path: ./*/*.pkg.tar.zst
           name: ${{ matrix.PKGBUILDs }}
           if-no-files-found: error
-  # AUR:
-  #   strategy:
-  #     matrix:
-  #       repos: ["foo"]
-  #       include:
-  #         - repos: foo-git
-  #           preinstall-pkgs: "cmake"
-  #     fail-fast: false
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v4.1.1
-
-  #     - uses: ./build-aur-action
-  #       with:
-  #         repo-name: ${{ matrix.repos }}
-  #         preinstallPkgs: ${{ matrix.preinstall-pkgs }}
-
-  #     - uses: actions/upload-artifact@v3.1.3
-  #       with:
-  #         path: ./*/*.pkg.tar.zst
-  #         name: ${{ matrix.repos }}
-  #         if-no-files-found: error
