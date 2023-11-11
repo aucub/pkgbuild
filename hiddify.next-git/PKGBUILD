@@ -44,7 +44,8 @@ prepare() {
     flutter doctor
     flutter doctor -v
     which flutter dart
-    sed -i 's/-Werror/-Werror,-Wdeprecated-declarations/g' linux/CMakeLists.txt
+    sed -i 's/-Werror/-Wnoerror,-Wnodeprecated-declarations/g' linux/CMakeLists.txt
+    cat linux/CMakeLists.txt
 }
 
 build() {
