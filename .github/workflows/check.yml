@@ -19,6 +19,10 @@ jobs:
             TYPE: bin
             DIRECTORY: hiddify.next-bin
             ASSET: hiddify-linux-x64.zip
+          - REPO: hiddify/hiddify-next
+            TYPE: source
+            DIRECTORY: hiddify.next
+            ASSET: No
           - REPO: LorenEteval/Furious
             TYPE: source
             DIRECTORY: furious
@@ -84,6 +88,8 @@ jobs:
             DIRECTORY: wox-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next-bin
+          - REPO: hiddify/hiddify-next
+            DIRECTORY: hiddify.next
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
     runs-on: ubuntu-latest
