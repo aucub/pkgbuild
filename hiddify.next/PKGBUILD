@@ -8,7 +8,7 @@ arch=(x86_64)
 url='https://github.com/hiddify/hiddify-next'
 license=('CCPL')
 depends=('hicolor-icon-theme' 'zlib' 'glibc' 'fuse2')
-makedepends=('cmake' 'clang' 'locate' 'ninja' 'pkg-config' 'gtk3' 'glib2' 'libayatana-appindicator' 'libayatana-indicator' 'libayatana-common' 'libappindicator-gtk3' 'libappindicator-gtk2' 'fuse2' 'fuse3' 'appimagetool-bin')
+makedepends=('git' 'mesa' 'cmake' 'clang' 'locate' 'ninja' 'pkg-config' 'gtk3' 'glib2' 'libayatana-appindicator' 'libayatana-indicator' 'libayatana-common' 'libappindicator-gtk3' 'libappindicator-gtk2' 'fuse3' 'appstream' 'appstream-glib' 'appstream-generator' 'archlinux-appstream-data' 'zsync' 'appimagetool-bin')
 optdepends=(
     'gnome-shell-extension-appindicator: for system tray icon if you are using Gnome'
 )
@@ -19,7 +19,7 @@ source=(
     "https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_3.13.9-stable.tar.xz"
 )
 sha256sums=(
-    "SKIP"
+    "a28279186f524501e16a9fb08ab9b556245e7d11f1348f3efc62e50c563b15c1"
     "b6bc6f93423488c67110e0fe56523cd2260f3a4c379ed015cd1c7fab66362739"
 )
 _install_path="/opt/$pkgname"
@@ -34,6 +34,7 @@ prepare() {
     flutter config --no-analytics
     flutter config --enable-linux-desktop
     flutter pub get
+    sed -i 's/-Werror/-Wno-error -Wno-deprecated-declarations/g' linux/CMakeLists.txt
 }
 
 build() {
@@ -43,6 +44,7 @@ build() {
     make translate
     make gen
     make linux-libs
+    unset SOURCE_DATE_EPOCH
     make linux-release
     ls -R dist/
     mkdir tmp_out
