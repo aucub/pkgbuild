@@ -9,7 +9,7 @@ arch=(x86_64)
 url='https://github.com/hiddify/hiddify-next'
 license=('CCPL')
 depends=('hicolor-icon-theme' 'zlib' 'glibc' 'fuse2')
-makedepends=('git' 'mesa' 'cmake' 'clang' 'locate' 'ninja' 'pkg-config' 'gtk3' 'glib2' 'libayatana-appindicator' 'libayatana-indicator' 'libayatana-common' 'libappindicator-gtk3' 'libappindicator-gtk2' 'fuse2' 'fuse3' 'appimagetool-bin')
+makedepends=('git' 'mesa' 'cmake' 'clang' 'locate' 'ninja' 'pkg-config' 'gtk3' 'glib2' 'libayatana-appindicator' 'libayatana-indicator' 'libayatana-common' 'libappindicator-gtk3' 'libappindicator-gtk2' 'fuse2' 'fuse3' 'appstream' 'appstream-glib' 'appstream-generator' 'archlinux-appstream-data' 'zsync' 'appimagetool-bin')
 optdepends=(
     'gnome-shell-extension-appindicator: for system tray icon if you are using Gnome'
 )
@@ -41,11 +41,7 @@ prepare() {
     flutter config --no-analytics
     flutter config --enable-linux-desktop
     flutter pub get
-    flutter doctor
-    flutter doctor -v
-    which flutter dart
-    sed -i 's/-Werror/-Wnoerror,-Wnodeprecated-declarations/g' linux/CMakeLists.txt
-    cat linux/CMakeLists.txt
+    sed -i 's/-Werror/-Wnoerror -Wnodeprecated-declarations/g' linux/CMakeLists.txt
 }
 
 build() {
@@ -55,6 +51,7 @@ build() {
     make translate
     make gen
     make linux-libs
+    unset SOURCE_DATE_EPOCH
     make linux-release
     ls -R dist/
     mkdir tmp_out
