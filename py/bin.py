@@ -27,24 +27,27 @@ else:
     new_pkgver = data["tag_name"].replace("-", "_")
 if new_pkgver != pkgver:
     pkgver = new_pkgver
+    version = pkgver
     pkgrel = 1
     update = 0
 for asset in data["assets"]:
     if os.environ.get("ASSET") in asset["name"]:
         if asset["name"] != name:
             name = asset["name"]
-            response = requests.get(asset["browser_download_url"])
-            with open(
-                os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "wb"
-            ) as file:
-                file.write(response.content)
-            sha256_hash = hashlib.sha256()
-            with open(
-                os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "rb"
-            ) as file:
-                for chunk in iter(lambda: file.read(4096), b""):
-                    sha256_hash.update(chunk)
+            version = name
             update = 0
+        response = requests.get(asset["browser_download_url"])
+        with open(
+            os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "wb"
+        ) as file:
+            file.write(response.content)
+        sha256_hash = hashlib.sha256()
+        with open(
+            os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "rb"
+        ) as file:
+            for chunk in iter(lambda: file.read(4096), b""):
+                sha256_hash.update(chunk)
+
 if update == 0:
     lines = []
     with open(os.environ.get("PKGBUILD"), "r") as file:
@@ -75,7 +78,7 @@ if update == 0:
     with open(
         os.environ.get("PKGBUILD").split("/")[0].strip() + "/version.txt", "w"
     ) as file:
-        file.write(name)
+        file.write(version)
 else:
     with open(
         os.environ.get("PKGBUILD").split("/")[0].strip() + "/version.txt", "w"
