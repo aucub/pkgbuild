@@ -119,6 +119,7 @@ jobs:
           name: ${{ secrets.name }}
           email: ${{ secrets.email }}
           DIRECTORY: ${{ matrix.DIRECTORY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir new
           cd new
@@ -137,8 +138,6 @@ jobs:
           cp .SRCINFO aur/$DIRECTORY/
           cd aur
           ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
-          git config --local user.email $email
-          git config --local user.name $name
           git add $DIRECTORY/PKGBUILD
           git add $DIRECTORY/.SRCINFO
           git commit -m  "update $DIRECTORY version to $result"

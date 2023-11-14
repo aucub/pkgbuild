@@ -8,7 +8,7 @@ arch=(x86_64)
 url='https://github.com/net-breaker/sing-land'
 license=('MIT')
 depends=('hicolor-icon-theme' 'glib2' 'glibc' 'gcc-libs' 'expat' 'dbus')
-makedepends=('nodejs' 'npm' 'openssl' 'openssl-1.1')
+makedepends=('nodejs' 'npm' 'openssl-1.1' 'libxcrypt' 'cryptsetup' 'libxcrypt-compat')
 optdepends=(
     'gnome-shell-extension-appindicator: for system tray icon if you are using Gnome'
 )
@@ -50,15 +50,11 @@ build() {
 package() {
     cd "${srcdir}/singland"
     find . -type f -exec install -Dm 755 {} "$pkgdir/$_install_path"/{} \;
-    
     install -Dm644 "${srcdir}/singland.desktop" "$pkgdir/usr/share/applications/${pkgname}.desktop"
-    
     for _icons in 32 256 512;do
         install -Dm644 "${srcdir}/singland/resources/icons/logo-${_icons}.png" "${pkgdir}/usr/share/icons/hicolor/${_icons}x${_icons}/apps/${pkgname}.png"
     done
-    
     install -dm755 "${pkgdir}/usr/bin"
     ln -s "/opt/${pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
-    
     install -Dm644 "$srcdir/singland/LICENSE" "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
