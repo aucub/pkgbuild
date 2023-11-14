@@ -8,8 +8,8 @@ pkgdesc="A GUI for sing-box. The universal proxy platform"
 arch=(x86_64)
 url='https://github.com/net-breaker/sing-land'
 license=('MIT')
-depends=('hicolor-icon-theme' 'glibc')
-makedepends=('git' 'nodejs' 'npm')
+depends=('hicolor-icon-theme' 'glib2' 'glibc' 'gcc-libs' 'expat' 'dbus')
+makedepends=('git' 'nodejs' 'npm' 'openssl' 'openssl-1.1')
 optdepends=(
     'gnome-shell-extension-appindicator: for system tray icon if you are using Gnome'
 )
