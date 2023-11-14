@@ -37,6 +37,7 @@ prepare() {
     cd ../editor
     npm ci
     cd ../singland
+    sed -i 's/"deb",\|"rpm",//g' electron-builder.json
     npm ci
 }
 
