@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [singland-git, singland]
+        PKGBUILDs: [clasht]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
