@@ -1,8 +1,0 @@
-[Desktop Entry]
-Name=singboxclient
-Exec=singboxclient %u
-Icon=singboxclient
-Type=Application
-StartupNotify=true
-Categories=Network
-Keywords=singboxclient;Proxy
