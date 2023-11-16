@@ -100,10 +100,16 @@ jobs:
             DIRECTORY: wox-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next-bin
+          - REPO: net-breaker/sing-land
+            DIRECTORY: singland-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
+          - REPO: net-breaker/sing-land
+            DIRECTORY: singland
+          - REPO: DryPeng/clashT
+            DIRECTORY: clasht
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
