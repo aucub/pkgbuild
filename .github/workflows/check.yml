@@ -100,8 +100,6 @@ jobs:
             DIRECTORY: wox-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next-bin
-          - REPO: net-breaker/sing-land
-            DIRECTORY: singland-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify.next
           - REPO: LorenEteval/Furious
