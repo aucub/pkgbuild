@@ -9,7 +9,6 @@ arch=('any')
 license=('GPL3')
 source=("https://github.com/imarkoff/Marble-shell-theme/releases/download/${pkgver//_/-}/Marble-shell.tar.xz")
 sha256sums=('98c9da17c43dc869af5abb6b8d3107bfe111d4c9aa7c4c7b2805ff29b60b6004')
-options=(!strip)
 
 package() {
     rm readme.txt Marble-shell.tar.xz
