@@ -39,6 +39,10 @@ jobs:
             TYPE: source
             DIRECTORY: clasht
             ASSET: No
+          - REPO: MerlinKodo/clash-rev
+            TYPE: source
+            DIRECTORY: clash.rev
+            ASSET: No
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
@@ -108,6 +112,8 @@ jobs:
             DIRECTORY: singland
           - REPO: DryPeng/clashT
             DIRECTORY: clasht
+          - REPO: MerlinKodo/clash-rev
+            DIRECTORY: clash.rev
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1

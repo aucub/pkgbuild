@@ -7,14 +7,11 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [furious, furious-git, hiddify.next]
+        PKGBUILDs: [hiddify.next]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
-
-      - run: |
-          rm -rf python-pybase64-git
 
       - name: Build Non-AUR packages
         id: makepkg
