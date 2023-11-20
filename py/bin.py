@@ -3,84 +3,100 @@ import re
 import requests
 import hashlib
 
-update = 1
-pkgrel = 0
-with open(os.environ.get("PKGBUILD"), "r") as file:
+UPDATE = 1
+PKGREL = 0
+
+# 获取环境变量
+pkgbuild_path = os.environ.get("PKGBUILD")
+asset_name = os.environ.get("ASSET")
+repo_name = os.environ.get("REPO")
+latest_version = os.environ.get("LATEST")
+
+# 检查 PKGBUILD 文件是否存在
+if not os.path.exists(pkgbuild_path):
+    raise FileNotFoundError("PKGBUILD file not found")
+
+# 读取 PKGBUILD 文件
+with open(pkgbuild_path, "r") as file:
     for line in file:
         if "pkgver=" in line:
             pkgver = line.split("=")[1].strip()
-        if os.environ.get("ASSET") in line and os.environ.get("REPO") in line:
-            name = (
-                os.environ.get("ASSET")
-                + line.split(os.environ.get("ASSET"))[1].strip().split('"')[0].strip()
-            )
+        if asset_name in line and repo_name in line:
+            name = asset_name + line.split(asset_name)[1].strip().split('"')[0].strip()
+
+# 发送请求获取 GitHub API 数据
 response = requests.get(
-    "https://api.github.com/repos/"
-    + os.environ.get("REPO")
-    + "/releases/"
-    + str(os.environ.get("LATEST"))
+    "https://api.github.com/repos/" + repo_name + "/releases/" + str(latest_version),
+    timeout=10,
 )
-data = response.json()
+
+# 检查响应状态码
+if response.status_code != 200:
+    raise ValueError("Invalid response from GitHub API")
+
+# 解析响应数据
+try:
+    data = response.json()
+except ValueError:
+    raise ValueError("Invalid JSON response from GitHub API")
+
+# 检查版本号是否以 "v" 开头
 if data["tag_name"].startswith("v"):
     new_pkgver = data["tag_name"].replace("-", "_")[1:]
 else:
     new_pkgver = data["tag_name"].replace("-", "_")
+
+# 更新版本号和 PKGREL
 if new_pkgver != pkgver:
     pkgver = new_pkgver
     version = pkgver
-    pkgrel = 1
-    update = 0
+    PKGREL = 1
+    UPDATE = 0
+
+# 下载并验证文件
 for asset in data["assets"]:
-    if os.environ.get("ASSET") in asset["name"]:
+    if asset_name in asset["name"]:
         if asset["name"] != name:
             name = asset["name"]
             version = name
-            update = 0
-        response = requests.get(asset["browser_download_url"])
-        with open(
-            os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "wb"
-        ) as file:
-            file.write(response.content)
+            UPDATE = 0
+        try:
+            response = requests.get(asset["browser_download_url"], timeout=10)
+        except requests.exceptions.RequestException:
+            raise ValueError("Failed to download file")
+        content = response.content
         sha256_hash = hashlib.sha256()
-        with open(
-            os.environ.get("PKGBUILD").split("/")[0].strip() + "/file", "rb"
-        ) as file:
-            for chunk in iter(lambda: file.read(4096), b""):
-                sha256_hash.update(chunk)
+        sha256_hash.update(content)
+        digest = sha256_hash.hexdigest()
+        if digest != asset["sha256"]:
+            raise ValueError("Downloaded file hash does not match the expected hash")
+        with open(os.path.join(os.path.dirname(pkgbuild_path), "file"), "wb") as file:
+            file.write(content)
 
-if update == 0:
+# 更新 PKGBUILD 文件和版本号文件
+if UPDATE == 0:
     lines = []
-    with open(os.environ.get("PKGBUILD"), "r") as file:
+    with open(pkgbuild_path, "r") as file:
         for line in file:
             if "pkgver=" in line:
                 line = "pkgver=" + pkgver + "\n"
-            if os.environ.get("ASSET") in line and os.environ.get("REPO") in line:
-                line = (
-                    "    "
-                    + line.split(os.environ.get("ASSET"))[0].strip()
-                    + name
-                    + '"'
-                    + "\n"
-                )
+            if asset_name in line and repo_name in line:
+                line = "    " + line.split(asset_name)[0].strip() + name + '"' + "\n"
             if "pkgrel=" in line:
-                if pkgrel == 1:
+                if PKGREL == 1:
                     line = "pkgrel=1" + "\n"
                 else:
                     match = re.search(r"\d+", line)
                     number = int(match.group())
                     line = "pkgrel=" + str(number + 1) + "\n"
-            lines.append(line)
-    with open(os.environ.get("PKGBUILD"), "w") as file:
-        for i, line in enumerate(lines):
             if "sha256" in line:
-                lines[i + 1] = '    "' + sha256_hash.hexdigest() + '"' + "\n"
+                lines.append('    "' + digest + '"' + "\n")
+            else:
+                lines.append(line)
+    with open(pkgbuild_path, "w") as file:
         file.writelines(lines)
-    with open(
-        os.environ.get("PKGBUILD").split("/")[0].strip() + "/version.txt", "w"
-    ) as file:
+    with open(os.path.join(os.path.dirname(pkgbuild_path), "version.txt"), "w") as file:
         file.write(version)
 else:
-    with open(
-        os.environ.get("PKGBUILD").split("/")[0].strip() + "/version.txt", "w"
-    ) as file:
+    with open(os.path.join(os.path.dirname(pkgbuild_path), "version.txt"), "w") as file:
         file.write("new")
