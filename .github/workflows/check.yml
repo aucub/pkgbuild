@@ -19,10 +19,6 @@ jobs:
             TYPE: bin
             DIRECTORY: hiddify.next-bin
             ASSET: hiddify-linux-x64
-          - REPO: net-breaker/sing-land
-            TYPE: bin
-            DIRECTORY: singland-bin
-            ASSET: singland-alpha-linux-amd64
           - REPO: hiddify/hiddify-next
             TYPE: source
             DIRECTORY: hiddify.next
@@ -114,21 +110,22 @@ jobs:
           ref: bot-${{ matrix.DIRECTORY }}
       - run: |
           version=$(<"$FILE")
+          echo "version=$version" >> $GITHUB_OUTPUT
           if [[ "$version" == *"new"* ]]; then
-            echo "Version New. Exiting workflow."
-            exit 1
+            echo "Version New."
           else
-            echo "version=$version" >> $GITHUB_OUTPUT
-            echo "Version not New. Continuing workflow."
+            echo "Version not New."
           fi
         env:
           FILE: ${{ matrix.DIRECTORY }}/version.txt
         id: version
       - uses: webfactory/ssh-agent@v0.8.0
+        if: "!contains(steps.version.outputs.version, 'new')"
         with:
           ssh-private-key: ${{ secrets.aur }}
           log-public-key: false
       - name: push
+        if: "!contains(steps.version.outputs.version, 'new')"
         env:
           result: ${{ steps.version.outputs.version }}
           name: ${{ secrets.name }}
