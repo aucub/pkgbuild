@@ -75,7 +75,6 @@ jobs:
           chmod -R a+rw .
           cd $DIRECTORY
           sudo -u builder makepkg --printsrcinfo > .SRCINFO
-          rm -rf file
           cd ..
       - name: push
         uses: crazy-max/ghaction-github-pages@v4.0.0
