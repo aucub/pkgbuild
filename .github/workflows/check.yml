@@ -17,12 +17,8 @@ jobs:
             ASSET: wox-linux-amd64
           - REPO: hiddify/hiddify-next
             TYPE: bin
-            DIRECTORY: hiddify.next-bin
+            DIRECTORY: hiddify-next-bin
             ASSET: hiddify-linux-x64
-          - REPO: hiddify/hiddify-next
-            TYPE: source
-            DIRECTORY: hiddify.next
-            ASSET: No
           - REPO: LorenEteval/Furious
             TYPE: source
             DIRECTORY: furious
@@ -94,9 +90,7 @@ jobs:
           - REPO: Wox-launcher/Wox
             DIRECTORY: wox-bin
           - REPO: hiddify/hiddify-next
-            DIRECTORY: hiddify.next-bin
-          - REPO: hiddify/hiddify-next
-            DIRECTORY: hiddify.next
+            DIRECTORY: hiddify-next-bin
           - REPO: LorenEteval/Furious
             DIRECTORY: furious
           - REPO: net-breaker/sing-land
