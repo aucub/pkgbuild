@@ -13,8 +13,8 @@ conflicts=(${_pkgname}-git ${_pkgname})
 source=(
     "https://raw.githubusercontent.com/appleboy/CodeGPT/main/LICENSE"
 )
-source_x86_64=("${_pkgname}-$CARCH-${pkgver}::${url}/releases/download/v${pkgver}/CodeGPT-${pkgver}-linux-amd64")
-source_aarch64=("${_pkgname}-$CARCH-${pkgver}::${url}/releases/download/v${pkgver}/CodeGPT-${pkgver}-linux-arm64")
+source_x86_64=("${_pkgname}-x86_64-${pkgver}::${url}/releases/download/v${pkgver}/CodeGPT-${pkgver}-linux-amd64")
+source_aarch64=("${_pkgname}-aarch64-${pkgver}::${url}/releases/download/v${pkgver}/CodeGPT-${pkgver}-linux-arm64")
 sha256sums=(
     "SKIP"
 )
