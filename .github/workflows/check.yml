@@ -19,18 +19,10 @@ jobs:
             TYPE: bin
             DIRECTORY: hiddify-next-bin
             ASSET: hiddify-linux-x64
-          - REPO: LorenEteval/Furious
-            TYPE: source
-            DIRECTORY: furious
-            ASSET: No
-          - REPO: net-breaker/sing-land
-            TYPE: source
-            DIRECTORY: singland
-            ASSET: No
-          - REPO: DryPeng/clashT
-            TYPE: source
-            DIRECTORY: clasht
-            ASSET: No
+          - REPO: imarkoff/Marble-shell-theme
+            TYPE: bin
+            DIRECTORY: marble-shell-theme
+            ASSET: Marble-shell.tar
     runs-on: ubuntu-latest
     container:
       image: archlinux:base-devel
@@ -91,12 +83,8 @@ jobs:
             DIRECTORY: wox-bin
           - REPO: hiddify/hiddify-next
             DIRECTORY: hiddify-next-bin
-          - REPO: LorenEteval/Furious
-            DIRECTORY: furious
-          - REPO: net-breaker/sing-land
-            DIRECTORY: singland
-          - REPO: DryPeng/clashT
-            DIRECTORY: clasht
+          - REPO: imarkoff/Marble-shell-theme
+            DIRECTORY: marble-shell-theme
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4.1.1
