@@ -1,0 +1,32 @@
+# Maintainer: herbal
+
+_pkgname=localsend
+pkgname=${_pkgname}-bin
+pkgver=1.13.1
+pkgrel=1
+pkgdesc='An open source cross-platform alternative to AirDrop'
+url=https://github.com/localsend/localsend
+arch=(x86_64)
+license=(MIT)
+depends=('xdg-user-dirs' 'libayatana-appindicator')
+conflicts=('localsend-git' 'localsend')
+provides=('localsend')
+source=("https://github.com/localsend/localsend/releases/download/v${pkgver}/LocalSend-${pkgver}-linux-x86-64.deb")
+sha256sums=('SKIP')
+
+package() {
+    bsdtar -xf "${srcdir}/data.tar.xz"
+    cd "${srcdir}/usr/share/localsend_app"
+    install -dm755 "${pkgdir}/opt/${_pkgname}/"
+    install -Dm755	'localsend_app' "${pkgdir}/opt/${_pkgname}/${_pkgname}"
+    cp -r 'lib/' "${pkgdir}/opt/${_pkgname}/"
+    cp -r 'data/' "${pkgdir}/opt/${_pkgname}/"
+    install -dm755 "${pkgdir}/usr/bin"
+    ln -s "/opt/${_pkgname}/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+    cd "${srcdir}/usr/share/applications"
+    sed -i 's/localsend_app/localsend/g' localsend_app.desktop
+    install -Dm644 'localsend_app.desktop' "${pkgdir}/usr/share/applications/${_pkgname}.desktop"
+    for _icons in 128x128 256x256;do
+        install -Dm644 "${srcdir}/usr/share/icons/hicolor/${_icons}/apps/localsend_app.png" "${pkgdir}/usr/share/icons/hicolor/${_icons}/apps/${_pkgname}.png"
+    done
+}
