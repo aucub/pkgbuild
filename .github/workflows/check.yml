@@ -38,13 +38,8 @@ jobs:
 
       - run: |
           pacman -Syu --noconfirm
-          pacman -S python python-pip git openssh openssl openssl-1.1 --noconfirm
-          python -m venv .venv
-          source .venv/bin/activate
-          pip install --upgrade pip
-          pip install requests
+          pacman -S python python-requests git openssh openssl openssl-1.1 --noconfirm
           python $PY
-          rm -rf .venv
         env:
           PKGBUILD: ${{ matrix.DIRECTORY }}/PKGBUILD
           PY: py/${{ matrix.TYPE }}.py
@@ -68,8 +63,6 @@ jobs:
           commit_message: update version
           target_branch: bot-${{ matrix.DIRECTORY }}
           build_dir: .
-          committer: ${{ secrets.COMMITTER }}
-          author: ${{ secrets.AUTHOR }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   push:
@@ -127,11 +120,11 @@ jobs:
           git add .SRCINFO
           git commit -m  "update version to $result"
           git push
-          git clone git@github.com:aucub/aur.git
-          cp PKGBUILD aur/$DIRECTORY/
-          cp .SRCINFO aur/$DIRECTORY/
-          cd aur
           ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+          git clone git@github.com:aucub/pkgbuild.git
+          cp PKGBUILD pkgbuild/$DIRECTORY/
+          cp .SRCINFO pkgbuild/$DIRECTORY/
+          cd pkgbuild
           git add $DIRECTORY/PKGBUILD
           git add $DIRECTORY/.SRCINFO
           git commit -m  "update $DIRECTORY version to $result"
