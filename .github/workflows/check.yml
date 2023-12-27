@@ -120,7 +120,8 @@ jobs:
           git add .SRCINFO
           git commit -m  "update version to $result"
           git push
-          git clone https://github.com/aucub/pkgbuild.git
+          ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+          git clone git@github.com:aucub/pkgbuild.git
           cp PKGBUILD pkgbuild/$DIRECTORY/
           cp .SRCINFO pkgbuild/$DIRECTORY/
           cd pkgbuild
