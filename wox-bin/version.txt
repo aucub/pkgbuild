@@ -1,1 +1,1 @@
-wox-linux-amd64-20231230-6889f2
+wox-linux-amd64-20231230-48556c
