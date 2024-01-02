@@ -13,10 +13,10 @@ provides=(${_pkgname})
 conflicts=(${_pkgname}-git ${_pkgname})
 options=(!strip)
 source=(
-    "${_pkgname}-${pkgver}-${pkgrel}::https://github.com/Wox-launcher/Wox/releases/download/v${pkgver//_/-}/wox-linux-amd64-20240102-f9cc83"
+    "${_pkgname}-${pkgver}-${pkgrel}::https://github.com/Wox-launcher/Wox/releases/download/v${pkgver//_/-}/wox-linux-amd64-20240102-9c4d54"
 )
 sha256sums=(
-    "c958c3108a0ecffabcbec4e875a2716d05d9ac22f9858cb9a0eaf6b4da0f178f"
+    "750dc2f11d25038722afc1b775e26a44e684432e917bda986e0b8b4682b61255"
 )
 
 package() {
