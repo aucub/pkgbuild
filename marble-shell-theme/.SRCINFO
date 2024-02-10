@@ -1,0 +1,11 @@
+pkgbase = marble-shell-theme
+	pkgdesc = Shell theme for GNOME DE
+	pkgver = 2023_11_12
+	pkgrel = 1
+	url = https://github.com/imarkoff/Marble-shell-theme
+	arch = any
+	license = GPL3
+	source = https://github.com/imarkoff/Marble-shell-theme/releases/download/2023-11-12/Marble-shell.tar.xz
+	sha256sums = f45aef22cb0f7e09055036f63a9c9d46d56c23d733ab67ee66e2ab773b5978a6
+
+pkgname = marble-shell-theme

@@ -1,0 +1,49 @@
+name: BUILD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  Non-AUR:
+    strategy:
+      matrix:
+        PKGBUILDs: [hiddify-next-bin]
+      fail-fast: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4.1.1
+
+      - name: Build Non-AUR packages
+        id: makepkg
+        uses: ./build-nonaur-action
+        with:
+          pkgdir: ${{ matrix.PKGBUILDs }}
+          aurDeps: true
+
+      - uses: actions/upload-artifact@v4.3.0
+        with:
+          path: ./*/*.pkg.tar.zst
+          name: ${{ matrix.PKGBUILDs }}
+          if-no-files-found: error
+  # AUR:
+  #   strategy:
+  #     matrix:
+  #       repos: ["foo"]
+  #       include:
+  #         - repos: foo-git
+  #           preinstall-pkgs: "cmake"
+  #     fail-fast: false
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4.1.1
+
+  #     - uses: ./build-aur-action
+  #       with:
+  #         repo-name: ${{ matrix.repos }}
+  #         preinstallPkgs: ${{ matrix.preinstall-pkgs }}
+
+  #     - uses: actions/upload-artifact@v4.3.0
+  #       with:
+  #         path: ./*/*.pkg.tar.zst
+  #         name: ${{ matrix.repos }}
+  #         if-no-files-found: error
