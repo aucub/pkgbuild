@@ -20,7 +20,7 @@ jobs:
           pkgdir: ${{ matrix.PKGBUILDs }}
           aurDeps: true
 
-      - uses: actions/upload-artifact@v4.3.0
+      - uses: actions/upload-artifact@v4.3.1
         with:
           path: ./*/*.pkg.tar.zst
           name: ${{ matrix.PKGBUILDs }}
@@ -42,7 +42,7 @@ jobs:
   #         repo-name: ${{ matrix.repos }}
   #         preinstallPkgs: ${{ matrix.preinstall-pkgs }}
 
-  #     - uses: actions/upload-artifact@v4.3.0
+  #     - uses: actions/upload-artifact@v4.3.1
   #       with:
   #         path: ./*/*.pkg.tar.zst
   #         name: ${{ matrix.repos }}
