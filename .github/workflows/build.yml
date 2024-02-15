@@ -7,7 +7,7 @@ jobs:
   Non-AUR:
     strategy:
       matrix:
-        PKGBUILDs: [hiddify-next-bin]
+        PKGBUILDs: [hiddify-next-git]
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
