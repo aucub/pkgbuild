@@ -1,1 +1,1 @@
-wox-linux-amd64-20240218-bcd8cd
+new
