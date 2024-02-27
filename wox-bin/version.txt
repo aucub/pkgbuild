@@ -1,1 +1,1 @@
-wox-linux-amd64-20240227-cef35d
+new
