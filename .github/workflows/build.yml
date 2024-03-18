@@ -11,7 +11,7 @@ jobs:
       fail-fast: false
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
 
       - name: Build Non-AUR packages
         id: makepkg
@@ -35,7 +35,7 @@ jobs:
   #     fail-fast: false
   #   runs-on: ubuntu-latest
   #   steps:
-  #     - uses: actions/checkout@v4.1.1
+  #     - uses: actions/checkout@v4.1.2
 
   #     - uses: ./build-aur-action
   #       with:
