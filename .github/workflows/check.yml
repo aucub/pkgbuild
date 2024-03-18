@@ -27,7 +27,7 @@ jobs:
     container:
       image: archlinux:base-devel
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
 
       - uses: pozetroninc/github-action-get-latest-release@master
         id: get_release
@@ -80,7 +80,7 @@ jobs:
             DIRECTORY: marble-shell-theme
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.1.1
+      - uses: actions/checkout@v4.1.2
         with:
           ref: bot-${{ matrix.DIRECTORY }}
       - run: |
