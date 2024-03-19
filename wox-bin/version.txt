@@ -1,1 +1,1 @@
-new
+wox-linux-amd64-20240319-a799f0
